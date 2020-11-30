@@ -32,6 +32,17 @@
   }
 }
 
+.new-play-control {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1rem;
+  width: 30%;
+  svg {
+    cursor: pointer;
+  }
+}
+
 input[type="range"]:focus {
   outline: none;
 }
