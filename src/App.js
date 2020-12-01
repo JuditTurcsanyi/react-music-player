@@ -31,7 +31,7 @@ function App() {
 }
 
 let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
-//TODO remove dupe
+
 const activeLibraryHandler = (nextPrev) => {
   const newSongs = songs.map((song) => {
       if(song.id === nextPrev.id) {
@@ -51,7 +51,6 @@ const songEndHandler = async () => {
         if (isPlaying) audioRef.current.play();
   }
 
-  //TODO remove dupe
   const shuffleHandler = async () => {
     let randomIndex = Math.floor(Math.random() * songs.length);
     while (randomIndex === currentIndex) {
@@ -66,7 +65,7 @@ const songEndHandler = async () => {
     <div className={`App ${libraryStatus ? 'library-active' : ""}`}>
       <Nav darkMode={darkMode} setDarkMode={setDarkMode} libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
       <Song currentSong={currentSong} />
-      <Player setSongs={setSongs} songs={songs} audioRef={audioRef} setIsPlaying={setIsPlaying} isPlaying={isPlaying} currentSong={currentSong} setCurrentSong={setCurrentSong} setSongInfo={setSongInfo} songInfo={songInfo} shuffleStatus={shuffleStatus} setShuffleStatus={setShuffleStatus} />
+      <Player activeLibraryHandler={activeLibraryHandler} shuffleHandler={shuffleHandler} setSongs={setSongs} songs={songs} audioRef={audioRef} setIsPlaying={setIsPlaying} isPlaying={isPlaying} currentSong={currentSong} setCurrentSong={setCurrentSong} setSongInfo={setSongInfo} songInfo={songInfo} shuffleStatus={shuffleStatus} setShuffleStatus={setShuffleStatus} />
       <Library isPlaying={isPlaying} libraryStatus={libraryStatus} audioRef={audioRef} songs={songs} setCurrentSong={setCurrentSong}  setSongs={setSongs} />
       <audio onTimeUpdate={timeUpdateHandler} onLoadedMetadata={timeUpdateHandler} ref={audioRef} src={currentSong.audio} onEnded={shuffleStatus ? shuffleHandler : songEndHandler}></audio>
     </div>

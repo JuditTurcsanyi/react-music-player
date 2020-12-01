@@ -3,23 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faPlay, faAngleLeft, faAngleRight, faPause, faRandom, faRedo} from "@fortawesome/free-solid-svg-icons";
 
 
-const Player = ({ shuffleStatus, setShuffleStatus, setSongs, audioRef, currentSong, setCurrentSong, isPlaying, setIsPlaying, setSongInfo, songInfo, songs }) => {
+const Player = ({ activeLibraryHandler, shuffleHandler, shuffleStatus, setShuffleStatus, setSongs, audioRef, currentSong, setCurrentSong, isPlaying, setIsPlaying, setSongInfo, songInfo, songs }) => {
     let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
-    //TODO remove dupe
-    const activeLibraryHandler = (nextPrev) => {
-        const newSongs = songs.map((song) => {
-            if(song.id === nextPrev.id) {
-                song.active = true;
-            } else {
-                song.active = false;
-            }
-            
-            return song;
-        });
-        setSongs(newSongs);
-    }
-    //Lifted up
-    // const audioRef = useRef(null);
+    
     const playSongHandler = () => {
         if(isPlaying) {
             audioRef.current.pause();
@@ -68,17 +54,7 @@ const Player = ({ shuffleStatus, setShuffleStatus, setSongs, audioRef, currentSo
     const shuffle = () => {
         setShuffleStatus(!shuffleStatus);
     }
-//TODO remove dupe
-    const shuffleHandler = async () => {
-        let randomIndex = Math.floor(Math.random() * songs.length);
-        while (randomIndex === currentIndex) {
-            randomIndex = Math.floor(Math.random() * songs.length);
-        } 
-        await setCurrentSong(songs[randomIndex]);
-        activeLibraryHandler(songs[randomIndex]);
-        setIsPlaying(true);
-        audioRef.current.play();
-    }
+
 
     const trackAnim = {
         transform: `translateX(${songInfo.animationPercentage}%)`

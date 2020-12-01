@@ -16,7 +16,6 @@ const LibrarySong = ({song, songs, setCurrentSong, id, audioRef, isPlaying, setS
             return song;
         });
         setSongs(newSongs);
-        console.log(isPlaying);
         if (isPlaying) audioRef.current.play();
     };
     return (
