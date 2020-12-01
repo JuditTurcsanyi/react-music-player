@@ -34,4 +34,14 @@ h4 {
 .dark-mode {
   background-color: black !important;
   color: white !important;
+  .library {
+    background: black !important;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  button {
+    color: white;
+  }
 }

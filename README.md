@@ -1,7 +1,8 @@
-This project was made based on The Creative React and Redux Course created by developedbyed (https://github.com/developedbyed). Newly added features:
+This project was made based on The Creative React and Redux Course created by developedbyed (https://github.com/developedbyed). Additional features added by me on top of the original course content:
 
 1. Replay function
 2. Shuffle function
+3. Dark Mode option
 
 # Getting Started with Create React App
 
