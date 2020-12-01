@@ -1,6 +1,7 @@
 This project was made based on The Creative React and Redux Course created by developedbyed (https://github.com/developedbyed). Newly added features:
 
 1. Replay function
+2. Shuffle function
 
 # Getting Started with Create React App
 
