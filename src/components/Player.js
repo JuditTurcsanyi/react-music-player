@@ -3,7 +3,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faPlay, faAngleLeft, faAngleRight, faPause, faRandom, faRedo} from "@fortawesome/free-solid-svg-icons";
 
 
-const Player = ({ setSongs, audioRef, currentSong, setCurrentSong, isPlaying, setIsPlaying, setSongInfo, songInfo, songs }) => {
+const Player = ({ shuffleStatus, setShuffleStatus, setSongs, audioRef, currentSong, setCurrentSong, isPlaying, setIsPlaying, setSongInfo, songInfo, songs }) => {
+    let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+    //TODO remove dupe
     const activeLibraryHandler = (nextPrev) => {
         const newSongs = songs.map((song) => {
             if(song.id === nextPrev.id) {
@@ -38,7 +40,7 @@ const Player = ({ setSongs, audioRef, currentSong, setCurrentSong, isPlaying, se
         setSongInfo({...songInfo, currentTime: e.target.value})
     }
     const skipTrackHandler = async (direction) => {
-        let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+        
         if(direction === "skip-forward") {
             await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
             activeLibraryHandler(songs[(currentIndex + 1) % songs.length]);
@@ -63,6 +65,20 @@ const Player = ({ setSongs, audioRef, currentSong, setCurrentSong, isPlaying, se
         setIsPlaying(true);
     }
 
+    const shuffle = () => {
+        setShuffleStatus(!shuffleStatus);
+    }
+//TODO remove dupe
+    const shuffleHandler = async () => {
+        let randomIndex = Math.floor(Math.random() * songs.length);
+        while (randomIndex === currentIndex) {
+            randomIndex = Math.floor(Math.random() * songs.length);
+        } 
+        await setCurrentSong(songs[randomIndex]);
+        activeLibraryHandler(songs[randomIndex]);
+        setIsPlaying(true);
+        audioRef.current.play();
+    }
 
     const trackAnim = {
         transform: `translateX(${songInfo.animationPercentage}%)`
@@ -81,10 +97,10 @@ const Player = ({ setSongs, audioRef, currentSong, setCurrentSong, isPlaying, se
             <div className="play-control">
                 <FontAwesomeIcon onClick={() => skipTrackHandler('skip-back')} className="skip-back" size="2x" icon={faAngleLeft} />
                 <FontAwesomeIcon onClick={playSongHandler} className="play" size="2x" icon={isPlaying ? faPause : faPlay} />
-                <FontAwesomeIcon onClick={() => skipTrackHandler('skip-forward')} className="skip-forward" size="2x" icon={faAngleRight} />
+                <FontAwesomeIcon onClick={shuffleStatus ? shuffleHandler : () => skipTrackHandler('skip-forward')} className="skip-forward" size="2x" icon={faAngleRight} />
             </div>
             <div className="new-play-control">
-                <FontAwesomeIcon icon={faRandom} size="2x" />
+                <FontAwesomeIcon onClick={() => shuffle()} icon={faRandom} size="2x" color={shuffleStatus ? "rgb(236, 0, 110)" : ""} />
                 <FontAwesomeIcon onClick={() => replay()} icon={faRedo} size="2x" />
             </div>
             {/* Lifted up */}

@@ -30,3 +30,8 @@ h4 {
 @import "./player";
 @import "./library";
 @import "./nav";
+
+.dark-mode {
+  background-color: black !important;
+  color: white !important;
+}

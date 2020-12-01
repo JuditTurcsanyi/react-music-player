@@ -18,7 +18,10 @@ function App() {
     animationPercentage: 0,
   });
   const [libraryStatus, setLibraryStatus] = useState(false);
-const timeUpdateHandler = (e) => {
+  const [shuffleStatus, setShuffleStatus] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+
+  const timeUpdateHandler = (e) => {
   const current = e.target.currentTime;
   const duration = e.target.duration;
   const roundedCurrent = Math.round(current);
@@ -26,6 +29,9 @@ const timeUpdateHandler = (e) => {
   const animation = ((roundedCurrent / roundedDuration)*100);
   setSongInfo({...songInfo, currentTime: current, duration: duration, animationPercentage: animation})
 }
+
+let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+//TODO remove dupe
 const activeLibraryHandler = (nextPrev) => {
   const newSongs = songs.map((song) => {
       if(song.id === nextPrev.id) {
@@ -39,19 +45,30 @@ const activeLibraryHandler = (nextPrev) => {
   setSongs(newSongs);
 }
 const songEndHandler = async () => {
-  let currentIndex = songs.findIndex((song) => song.id === currentSong.id);
+  
         await setCurrentSong(songs[(currentIndex + 1) % songs.length]);
         activeLibraryHandler(songs[(currentIndex + 1) % songs.length]);
         if (isPlaying) audioRef.current.play();
   }
 
+  //TODO remove dupe
+  const shuffleHandler = async () => {
+    let randomIndex = Math.floor(Math.random() * songs.length);
+    while (randomIndex === currentIndex) {
+      randomIndex = Math.floor(Math.random() * songs.length);
+    } 
+    await setCurrentSong(songs[randomIndex]);
+    activeLibraryHandler(songs[randomIndex]);
+    audioRef.current.play();
+}
+
   return (
     <div className={`App ${libraryStatus ? 'library-active' : ""}`}>
-      <Nav libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
+      <Nav darkMode={darkMode} setDarkMode={setDarkMode} libraryStatus={libraryStatus} setLibraryStatus={setLibraryStatus} />
       <Song currentSong={currentSong} />
-      <Player setSongs={setSongs} songs={songs} audioRef={audioRef} setIsPlaying={setIsPlaying} isPlaying={isPlaying} currentSong={currentSong} setCurrentSong={setCurrentSong} setSongInfo={setSongInfo} songInfo={songInfo} />
+      <Player setSongs={setSongs} songs={songs} audioRef={audioRef} setIsPlaying={setIsPlaying} isPlaying={isPlaying} currentSong={currentSong} setCurrentSong={setCurrentSong} setSongInfo={setSongInfo} songInfo={songInfo} shuffleStatus={shuffleStatus} setShuffleStatus={setShuffleStatus} />
       <Library isPlaying={isPlaying} libraryStatus={libraryStatus} audioRef={audioRef} songs={songs} setCurrentSong={setCurrentSong}  setSongs={setSongs} />
-      <audio onTimeUpdate={timeUpdateHandler} onLoadedMetadata={timeUpdateHandler} ref={audioRef} src={currentSong.audio} onEnded={songEndHandler}></audio>
+      <audio onTimeUpdate={timeUpdateHandler} onLoadedMetadata={timeUpdateHandler} ref={audioRef} src={currentSong.audio} onEnded={shuffleStatus ? shuffleHandler : songEndHandler}></audio>
     </div>
   );
 }
